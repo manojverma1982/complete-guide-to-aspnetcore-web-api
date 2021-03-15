@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace my_books.Data.Models
+namespace my_books.Data.ViewModel
 {
-    public class Book
+    public class BookVM
     {
-        public int Id { get; set; }
-
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -24,15 +22,5 @@ namespace my_books.Data.Models
         public string Author { get; set; }
 
         public string CovertUrl { get; set; }
-
-        public DateTime DateAdded { get; set; }
-
-        //Navigation Properties
-
-        public int PublisherId { get; set; }
-
-        public Publisher Publisher { get; set; }
-
-        public List<Book_Author> Book_Authors { get; set; }
     }
 }

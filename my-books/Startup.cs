@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using my_books.Data;
+using my_books.Data.Services;
 
 namespace my_books
 {
@@ -28,6 +29,12 @@ namespace my_books
 
             //Configure DBContext with SQL
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionString));
+
+
+            //Configure the Services
+            services.AddTransient<BookService>();
+            services.AddTransient<PublisherService>();
+            services.AddTransient<AuthorService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -56,7 +63,7 @@ namespace my_books
                 endpoints.MapControllers();
             });
 
-            AppDbInitializer.Seed(app);
+           // AppDbInitializer.Seed(app);
         }
     }
 }
