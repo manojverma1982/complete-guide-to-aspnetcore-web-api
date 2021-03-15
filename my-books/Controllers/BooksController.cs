@@ -20,10 +20,10 @@ namespace my_books.Controllers
             _bookService = bookService;
         }
 
-        [HttpPost("add-book")]
+        [HttpPost("add-book-with-authors")]
         public IActionResult AddBook([FromBody]BookVM book)
         {
-            _bookService.AddBook(book);
+            _bookService.AddBookWithAuthors(book);
             return Ok();
         }
 
@@ -36,7 +36,7 @@ namespace my_books.Controllers
         [HttpGet("get-book-by-id/{bookId}")]
         public IActionResult GetBookById(int bookId)
         {
-            return Ok(_bookService.GetBookById(bookId));
+            return Ok(_bookService.GetBookWithAuthorsById(bookId));
         }
 
 

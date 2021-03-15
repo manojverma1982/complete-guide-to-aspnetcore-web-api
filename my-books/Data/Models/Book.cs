@@ -21,7 +21,7 @@ namespace my_books.Data.Models
 
         public string Genre { get; set; }
 
-        public string Author { get; set; }
+        //public string Author { get; set; }
 
         public string CovertUrl { get; set; }
 

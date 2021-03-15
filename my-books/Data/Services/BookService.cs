@@ -15,7 +15,7 @@ namespace my_books.Data.Services
             _context = context;
         }
 
-        public void AddBook(BookVM book)
+        public void AddBookWithAuthors(BookVM book)
         {
             var _book = new Book()
             {
@@ -25,18 +25,50 @@ namespace my_books.Data.Services
                 DateRead = book.IsRead ? book.DateRead.Value : null,
                 Rate = book.IsRead ? book.Rate.Value : null,
                 Genre = book.Genre,
-                Author = book.Author,
+                //Author = book.Author,
                 CovertUrl = book.CovertUrl,
-                DateAdded = DateTime.Now
+                DateAdded = DateTime.Now,
+                PublisherId = book.PublisherId
             };
             _context.Books.Add(_book);
             _context.SaveChanges();
+
+            foreach (var id in book.AuthorIds)
+            {
+                var _book_Author = new Book_Author()
+                {
+                    BookId = _book.Id,
+                    AuthorId = id
+                };
+
+                _context.Book_Authors.Add(_book_Author);
+                _context.SaveChanges();
+            }
         
         }
 
         public List<Book> GetAllBooks() => _context.Books.ToList();
 
-        public Book GetBookById(int bookId) => _context.Books.FirstOrDefault(book => book.Id == bookId);
+        //public Book GetBookById(int bookId) => _context.Books.FirstOrDefault(book => book.Id == bookId);
+
+        public BookWithAuthorsVM GetBookWithAuthorsById(int bookId) {
+
+            var _bookWithAuthor = _context.Books.Where(book => book.Id == bookId).Select(book => new BookWithAuthorsVM()
+            {
+                Title = book.Title,
+                Description = book.Description,
+                IsRead = book.IsRead,
+                DateRead = book.IsRead ? book.DateRead.Value : null,
+                Rate = book.IsRead ? book.Rate.Value : null,
+                Genre = book.Genre,
+                //Author = book.Author,
+                CovertUrl = book.CovertUrl,
+                
+                PublisherName = book.Publisher.Name,
+                AuthorNames = book.Book_Authors.Select( n=> n.Author.FullName).ToList()
+            }).FirstOrDefault();
+            return _bookWithAuthor;
+        }
 
 
         public Book UpdateBookById(int bookId, BookVM book)
@@ -51,7 +83,7 @@ namespace my_books.Data.Services
                 _book.DateRead = book.IsRead ? book.DateRead.Value : null;
                 _book.Rate = book.IsRead ? book.Rate.Value : null;
                 _book.Genre = book.Genre;
-                _book.Author = book.Author;
+                //_book.Author = book.Author;
                 _book.CovertUrl = book.CovertUrl;
                 _book.DateAdded = DateTime.Now;
 
