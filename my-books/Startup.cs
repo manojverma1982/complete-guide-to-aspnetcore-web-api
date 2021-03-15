@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,16 @@ namespace my_books
             services.AddTransient<BookService>();
             services.AddTransient<PublisherService>();
             services.AddTransient<AuthorService>();
+
+            services.AddApiVersioning(config => {
+
+                config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                //config.ApiVersionReader = new HeaderApiVersionReader("custom-version-header");
+                config.ApiVersionReader = new MediaTypeApiVersionReader();
+            }
+            
+            );
 
             services.AddSwaggerGen(c =>
             {
