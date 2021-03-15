@@ -44,6 +44,26 @@ namespace my_books.Controllers
 
         }
 
+        [HttpGet("get-all-publisher")]
+        public IActionResult GetAllPublisher(string sortBy , string searchString , int pageNumer)
+        {
+            try
+            {
+                return Ok(_publisherService.GetAllPublisher(sortBy , searchString , pageNumer));
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("Sorry, we could not load the publishers");
+            }
+            
+            
+
+           
+
+
+        }
+
         [HttpGet("get-publisher-by-id/{publisherId}")]
         public IActionResult GetPublisherById(int publisherId)
         //public CustomActionResult GetPublisherById(int publisherId)

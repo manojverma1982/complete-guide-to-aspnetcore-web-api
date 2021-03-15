@@ -1,4 +1,5 @@
 ﻿using my_books.Data.Models;
+using my_books.Data.Paging;
 using my_books.Data.ViewModel;
 using my_books.Exceptions;
 using System;
@@ -43,18 +44,48 @@ namespace my_books.Data.Services
         public PublisherWithBooksAndAuthorsVM GetPublisherData(int publisherId)
         {
             return _context.Publishers.Where(n => n.Id == publisherId)
-                .Select(n => new PublisherWithBooksAndAuthorsVM() {
+                .Select(n => new PublisherWithBooksAndAuthorsVM()
+                {
                     Name = n.Name,
-                    BookAuthors = n.Books.Select(x => new BookAuthorVM() {
+                    BookAuthors = n.Books.Select(x => new BookAuthorVM()
+                    {
                         BookName = x.Title,
                         BookAuthors = x.Book_Authors.Select(a => a.Author.FullName).ToList()
 
                     }).ToList()
 
                 }).FirstOrDefault();
-            
+
 
         }
+
+        internal List<Publisher> GetAllPublisher(string sortBy, string searchString, int? pageNumer)
+        {
+            var allpublisher = _context.Publishers.OrderBy(n => n.Name).ToList();
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy)
+                {
+                    case "name_desc":
+                        allpublisher = _context.Publishers.OrderByDescending(n => n.Name).ToList();
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                allpublisher = allpublisher.Where(n => n.Name.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            }
+
+            int pageSize = 2;
+            allpublisher = PaginatedList<Publisher>.Create(allpublisher.AsQueryable(), pageNumer ?? 1, pageSize);
+
+            return allpublisher;
+        }
+
 
         internal void DeletePublisherById(int publisherId)
         {
